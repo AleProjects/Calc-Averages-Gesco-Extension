@@ -1,3 +1,10 @@
+/**
+ * JS library: Calc Averages Gesco Extension
+ * Require jQuery to run
+ * Free to use and edit with this doc
+ * Contact me for help: progettialessandro(at)gmail.com
+ */
+
 if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
     $(document).ready(function() {
         $valutazioniNew = $('[data-scheda="valutazioni-new"]');
@@ -16,6 +23,7 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
                 '               <h5 class="modal-title">Calcolo delle medie</h5>' +
                 '           </div>' +
                 '       <div class="modal-body"></div>' +
+                '       <div class="modal-footer">Get it on <a href="https://github.com/AleProjects/Calc-Averages-Gesco-Extension"><img src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Logo.png" height="10px;" /><img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" height="10px;" /></a> now.</div>' +
                 '   </div>' +
                 '</div>');
             $('body').append($modal);
