@@ -133,7 +133,6 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
                 tempPercentageSum += $mark.data('percentage');
             });
             tempMark = Math.floor(tempMarksSum/tempPercentageSum*100)/100;
-            console.log(tempMark);
             $subject.find('.average .label')
                 .removeClass('label-warning')
                 .removeClass('label-danger')
