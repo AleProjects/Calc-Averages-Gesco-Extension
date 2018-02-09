@@ -24,6 +24,14 @@ L'utente è libero di non utilizzare l'estensione e non si risponde di eventuali 
 
 7. Ecco fatto!
 
+# Come aggiornare
+
+1. Aggiorna la repository locale
+
+2. Naviga su [chrome://extensions/](chrome://extensions/)
+
+3. Premi CTRL + R
+
 # Come si usa
 
 1. Assicurati che l'estenzione sia installata correttamente e abilitata
