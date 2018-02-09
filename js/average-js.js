@@ -9,30 +9,12 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
     $(document).ready(function() {
         $valutazioniNew = $('[data-scheda="valutazioni-new"]');
         if($valutazioniNew.length) {
-            /*
-            // Add button
-            $('body .container-fluid').first().find('.row div').prepend('<button id="create-averages" class="float-right btn btn-success d-inline calc-average" style="position: absolute; right: 20px;" data-toggle="modal" data-target="#averagesModal">Calcola media</button>');
-            // Create modal
-            $modal = $('' +
-                '<div class="modal fade bd-example-modal-lg" id="averagesModal" tabindex="-1" role="dialog" aria-labelledby="averagesModalLabel" aria-hidden="true">' +
-                '   <div class="modal-dialog modal-lg">' +
-                '       <div class="modal-content">' +
-                '           <div class="modal-header">' +
-                '               <button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
-                '                   <span aria-hidden="true">&times;</span>' +
-                '               </button>' +
-                '               <h5 class="modal-title">Calcolo delle medie</h5>' +
-                '           </div>' +
-                '       <div class="modal-body"></div>' +
-                '       <div class="modal-footer">Get it on <a href="https://github.com/AleProjects/Calc-Averages-Gesco-Extension" target="_blank"><img src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Logo.png" height="10px;" /><img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" height="10px;" /></a> now.</div>' +
-                '   </div>' +
-                '</div>');
-            // $('body').append($modal);
-            // createTable($modal.find('.modal-body'));
-            */
             replaceTable($(document).find('[data-scheda="valutazioni-new"] table'));
             calcAverages();
         }
+
+        checkUpdate();
+        notify();
     });
 
     $(document)
@@ -180,5 +162,54 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
                 .addClass('label-' + (tempMark<6 ? 'warning' : 'success'))
                 .html(tempMark);
         });
+    }
+
+    function checkUpdate() {
+        if(!chrome.storage)
+            return;
+
+        var storage = chrome.storage.sync;
+        var lastUpdate = storage.get("gescoLastLocalUpdate", function(data) {
+            var lastLocalUpdate = data.gescoLastLocalUpdate;
+            if(!lastLocalUpdate || Date.now() > (lastLocalUpdate+(60*60*24*100))) {
+            // if(true) {
+                storage.set({"gescoLastLocalUpdate": Date.now()}, function () {
+
+                    var data = new FormData();
+
+                    $.ajax({
+                        url: "https://raw.githubusercontent.com/AleProjects/Calc-Averages-Gesco-Extension/master/manifest.json",
+                        type: "get",
+                        dataType: "json",
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        success: function (data, status) {
+                            var manifestData = chrome.runtime.getManifest();
+                            if(manifestData.version == data.version)
+                                notify("Gesco average extension", "Hi, I need an update...");
+                        },
+                        error: function (xhr, desc, err) {
+                            console.log(xhr);
+                            console.log(desc);
+                            console.log(err);
+                        }
+                    });
+
+                    if (chrome.runtime.error) {
+                        console.log("Runtime error.");
+                    }
+                });
+            }
+        });
+    }
+
+    function notify(title, message, callback) {
+        var opt = {
+            type: "basic",
+            title: title,
+            message: message
+        };
+        chrome.runtime.sendMessage({type: "notification", opt: opt}, function(){});
     }
 }

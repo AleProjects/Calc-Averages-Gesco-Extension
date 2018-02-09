@@ -1,11 +1,11 @@
 {
-  "name":"Gesco Theme",
+  "name":"Gesco Extension",
   "description":"Un estensione per cambiare i temi a http://gesco.bearzi.it",
   "version":"1.0",
   "manifest_version":2,
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "Gesco theme"
+    "default_title": "Gesco Extension"
   },
   "icons": {
     "16": "32.png",
@@ -14,9 +14,12 @@
     "128": "32.png"
   },
   "permissions": [
+    "notifications",
     "contextMenus",
     "management",
-    "tabs"
+    "tabs",
+    "storage",
+    "webRequest"
   ],
   "content_scripts": [
     {
@@ -26,6 +29,6 @@
     }
   ],
    "background": {
-      "page": "background.html"
+      "scripts": [ "js/background.js" ]
    }
 }
