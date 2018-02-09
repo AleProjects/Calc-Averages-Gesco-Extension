@@ -186,7 +186,7 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
                         contentType: false,
                         success: function (data, status) {
                             var manifestData = chrome.runtime.getManifest();
-                            if(manifestData.version == data.version)
+                            if(manifestData.version != data.version)
                                 notify("Gesco average extension", "Hi, I need an update...");
                         },
                         error: function (xhr, desc, err) {
