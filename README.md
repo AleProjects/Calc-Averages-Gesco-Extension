@@ -42,6 +42,8 @@ L'utente è libero di non utilizzare l'estensione e non si risponde di eventuali 
 
 4. Clicca sul pulsante verde *Calcola media* in alto a destra
 
+# Segnalazioni e crediti
+
 Questo progetto è stato creato da Alessandro, per supporto aprire una segnalazione.
 
 Per contatti: progettialessandro(at)gmail.com

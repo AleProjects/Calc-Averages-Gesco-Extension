@@ -1,7 +1,7 @@
 {
   "name":"Gesco Extension",
   "description":"Un estensione per cambiare i temi a http://gesco.bearzi.it",
-  "version":"1.0",
+  "version":"1.1",
   "manifest_version":2,
   "browser_action": {
     "default_popup": "popup.html",

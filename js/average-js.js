@@ -173,38 +173,47 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
             var lastLocalUpdate = data.gescoLastLocalUpdate;
             if(!lastLocalUpdate || Date.now() > (lastLocalUpdate+(60*60*24*100))) {
             // if(true) {
-                storage.set({"gescoLastLocalUpdate": Date.now()}, function () {
+                var data = new FormData();
 
-                    var data = new FormData();
-
-                    $.ajax({
-                        url: "https://raw.githubusercontent.com/AleProjects/Calc-Averages-Gesco-Extension/master/manifest.json",
-                        type: "get",
-                        dataType: "json",
-                        data: data,
-                        processData: false,
-                        contentType: false,
-                        success: function (data, status) {
-                            var manifestData = chrome.runtime.getManifest();
-                            if(manifestData.version != data.version)
-                                notify("Gesco average extension", "Hi, I need an update...");
-                        },
-                        error: function (xhr, desc, err) {
-                            console.log(xhr);
-                            console.log(desc);
-                            console.log(err);
+                $.ajax({
+                    url: "https://raw.githubusercontent.com/AleProjects/Calc-Averages-Gesco-Extension/master/manifest.json",
+                    type: "get",
+                    dataType: "json",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data, status) {
+                        var manifestData = chrome.runtime.getManifest();
+                        if(manifestData.version != data.version) {
+                            storage.set({"gescoLastLocalUpdate": Date.now()}, function () {
+                                notifyUpdate();
+                            });
                         }
-                    });
-
-                    if (chrome.runtime.error) {
-                        console.log("Runtime error.");
+                    },
+                    error: function (xhr, desc, err) {
+                        console.log(xhr);
+                        console.log(desc);
+                        console.log(err);
+                        notifyNoConnection();
                     }
                 });
+
+                if (chrome.runtime.error) {
+                    console.log("Runtime error.");
+                }
             }
-        });
+        })
     }
 
-    function notify(title, message, callback) {
+    function notifyUpdate() {
+        chrome.runtime.sendMessage({type: "update-notification"}, function(){});
+    }
+
+    function notifyNoConnection() {
+        chrome.runtime.sendMessage({type: "update-error-notification"}, function(){});
+    }
+
+    function notify(title, message) {
         var opt = {
             type: "basic",
             title: title,

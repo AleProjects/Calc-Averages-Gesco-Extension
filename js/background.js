@@ -6,7 +6,7 @@ function init() {
         }});
 
         chrome.contextMenus.create({title: "Vai a github", contexts: ["browser_action"], onclick:function() {
-            chrome.tabs.create( { url: "https://github.com/AleProjects/Calc-Averages-Gesco-Extension"} );
+            openGitHub();
         }});
 
         var doNotDisturbMenuId = chrome.contextMenus.create({title: "Altro...", contexts: ["browser_action"]});
@@ -25,15 +25,7 @@ function init() {
         }});
 
         chrome.contextMenus.create({title: "Vai a github", contexts: ContextMenu.AllContextsExceptBrowserAction, onclick:function(info, tab) {
-            chrome.tabs.create( { url: "https://github.com/AleProjects/Calc-Averages-Gesco-Extension"} );
-        }});
-
-        chrome.contextMenus.create({title: "Create notification", contexts: ContextMenu.AllContextsExceptBrowserAction, onclick:function(info, tab) {
-            createNotification({
-                id: "single",
-                title: "title",
-                message: "message"
-            });
+            openGitHub();
         }});
 	}
 }
@@ -43,8 +35,34 @@ ContextMenu.AllContextsExceptBrowserAction = ["page", "frame", "link", "selectio
 init();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    var opt;
     if(request.type === "notification"){
-        request.opt.iconUrl = chrome.extension.getURL("128.png");
-        chrome.notifications.create('notify', request.opt, function(){});
+        chrome.notifications.create('gesco-notify', request.opt, function(){});
+    }
+    else if(request.type === "update-notification"){
+        opt = {
+            type: "basic",
+            title: "Gesco average extension",
+            message: "Hi, I need an update...\nFollow the instuction on GitHub to know how to update",
+            iconUrl: chrome.extension.getURL("128.png")
+        };
+        chrome.notifications.create(opt, function(){});
+    }
+    else if(request.type === "update-error-notification"){
+        opt = {
+            type: "basic",
+            title: "Gesco average extension",
+            message: "Hi, I cannot verify if there is an update\nI need the internet connection",
+            iconUrl: chrome.extension.getURL("128.png")
+        };
+        chrome.notifications.create(opt, function() {});
     }
 });
+
+function closeNotifications(id) {
+    chrome.notifications.clear(id, function() {});
+}
+
+function openGitHub() {
+    chrome.tabs.create( { url: "https://github.com/AleProjects/Calc-Averages-Gesco-Extension"} );
+}
