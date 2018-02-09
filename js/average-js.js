@@ -9,8 +9,9 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
     $(document).ready(function() {
         $valutazioniNew = $('[data-scheda="valutazioni-new"]');
         if($valutazioniNew.length) {
+            /*
+            // Add button
             $('body .container-fluid').first().find('.row div').prepend('<button id="create-averages" class="float-right btn btn-success d-inline calc-average" style="position: absolute; right: 20px;" data-toggle="modal" data-target="#averagesModal">Calcola media</button>');
-
             // Create modal
             $modal = $('' +
                 '<div class="modal fade bd-example-modal-lg" id="averagesModal" tabindex="-1" role="dialog" aria-labelledby="averagesModalLabel" aria-hidden="true">' +
@@ -26,15 +27,17 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
                 '       <div class="modal-footer">Get it on <a href="https://github.com/AleProjects/Calc-Averages-Gesco-Extension" target="_blank"><img src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Logo.png" height="10px;" /><img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" height="10px;" /></a> now.</div>' +
                 '   </div>' +
                 '</div>');
-            $('body').append($modal);
-            createTable();
+            // $('body').append($modal);
+            // createTable($modal.find('.modal-body'));
+            */
+            replaceTable($(document).find('[data-scheda="valutazioni-new"] table'));
             calcAverages();
         }
     });
 
     $(document)
-        .on('click', '.mark-el', function() {
-            $(this).toggleClass('no-calc');
+        .on('click', '.mark-el .mark-content', function() {
+            $(this).parent().toggleClass('no-calc');
         })
         .on('click', '.calc-average, .mark-el', function() {
             calcAverages();
@@ -65,11 +68,9 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
         return subjects;
     }
 
-    function createTable() {
+    function createTable($content) {
         var tempMark, tempAverage;
         var subjects = getSubjects();
-        $modal = $('#averagesModal');
-        $body = $modal.find('.modal-body');
         $table = $('<table />').addClass('average-table table table-bordered table-striped table-hover');
         $tbody = $table.append('<tbody />');
         $.each(subjects, function(idx, el) {
@@ -78,10 +79,14 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
 
             $.each(el.marks, function(idx, mark) {
                 tempMark = mark.mark;
-                $row.append('<td class="text-center mark-el" data-value="' + mark.mark + '" data-percentage="' + mark.percentage + '">' +
-                    '<span style="font-size: small;">' + mark.time + '</span><br />' +
-                    '<span class="label label-' + (tempMark<6 ? 'warning' : 'success') + '">' + mark.mark + '</span><br />' +
-                    '<span class="data" style="font-size: small;">(' + mark.percentage + '%)</span>' +
+                $row.append('' +
+                    '<td class="text-center mark-el" data-value="' + mark.mark + '" data-percentage="' + mark.percentage + '">' +
+                    '   <span class="mark-content d-block">' +
+                    '       <span style="font-size: small;">' + mark.time + '</span><br />' +
+                    '       <span class="label label-' + (tempMark<6 ? 'warning' : 'success') + '">' + mark.mark + '</span><br />' +
+                    '       <span class="data" style="font-size: small;">(' + mark.percentage + '%)</span><br />' +
+                    '   </span>' +
+                    '   <button class="btn btn-default fa fa-info mark-info" style="" onclick="' + mark.onclick + '"></button>' +
                     '</td>');
             });
 
@@ -89,14 +94,49 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
                 $row.append('<td></td>');
 
             // Add average column
-            $row.append('<td class="average"><br /><span class="label"></span></td>');
+            $row.append('<td class="average center-vert text-center"><span class="label"></span></td>');
 
             $tbody.append($row);
         });
 
-        $body.empty();
+        $content.empty();
         $table.append($tbody);
-        $body.append($table);
+        $content.append($table);
+    }
+
+    function replaceTable($table) {
+        var tempMark, tempAverage;
+        var subjects = getSubjects();
+        $table = $table.addClass('average-table');
+        $tbody = $('<tbody />');
+        $.each(subjects, function(idx, el) {
+            $row = $('<tr />');
+            $row.append('<td class="subject-name center-vert col-sm-2">' + el.name + '</td>');
+
+            $.each(el.marks, function(idx, mark) {
+                tempMark = mark.mark;
+                $row.append('' +
+                    '<td class="text-center mark-el" data-value="' + mark.mark + '" data-percentage="' + mark.percentage + '">' +
+                    '   <span class="mark-content d-block">' +
+                    '       <span style="font-size: small;">' + mark.time + '</span><br />' +
+                    '       <span class="label label-' + (tempMark<6 ? 'warning' : 'success') + '">' + mark.mark + '</span><br />' +
+                    '       <span class="data" style="font-size: small;">(' + mark.percentage + '%)</span><br />' +
+                    '   </span>' +
+                    '   <button class="btn btn-default fa fa-info mark-info" style="" onclick="' + mark.onclick + '"></button>' +
+                    '</td>');
+            });
+
+            for(var i=0;i<subjects.maxNumMarks-el.marks.length; i++)
+                $row.append('<td></td>');
+
+            // Add average column
+            $row.append('<td class="average center-vert text-center"><span class="label"></span></td>');
+
+            $tbody.append($row);
+        });
+
+        $table.empty();
+        $table.append($tbody);
     }
 
     function getMarks($subject) {
@@ -111,7 +151,8 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
                 marks.push({
                     time: tempData.first().html(),
                     mark: tempMark.replace(' *', ''),
-                    percentage: tempData.last().html().replace('(', '').replace(')', '').replace('%', '')
+                    percentage: tempData.last().html().replace('(', '').replace(')', '').replace('%', ''),
+                    onclick: $mark.attr('onclick')
                 });
             }
         });
@@ -120,8 +161,8 @@ if (window.location.href.indexOf("https://gesco.bearzi.it/") == 0) {
 
     function calcAverages() {
         var tempMark, tempMarksSum, tempPercentageSum;
-        $modal = $('#averagesModal');
-        $subjects = $modal.find('table tr');
+        $table = $('.average-table');
+        $subjects = $table.find('tr');
         $.each($subjects, function(idx, subject) {
             $subject = $(subject);
             $marks = $subject.find('.mark-el:not(.no-calc)');
