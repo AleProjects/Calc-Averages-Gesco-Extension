@@ -3,28 +3,3 @@
  * Free to use and edit with this doc
  * Contact me for help: progettialessandro@gmail.com
  */
-.mark-el, .mark-el * {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-}
-.mark-el {
-    cursor: pointer;
-    padding: 0 !important;
-}
-.mark-content {
-    padding: 8px 8px 0;
-    display: block;
-}
-.mark-info {
-    font-size: 10px !important;
-    padding: 5px;
-    margin: 0 8px 8px !important;
-    width: calc(100% - 16px);
-}
-.no-calc .mark-content {
-    opacity: 0.2;
-}

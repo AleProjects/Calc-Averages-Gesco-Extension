@@ -1,11 +1,11 @@
 {
-  "name":"Gesco Extension",
-  "description":"Un estensione per cambiare i temi a http://gesco.bearzi.it",
+  "name":"Gesco - Calcolatore di medie",
+  "description":"Un estensione per clacolare automaticamente le medie",
   "version":"1.1",
   "manifest_version":2,
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "Gesco Extension"
+    "default_title": "Gesco - Calcolatore di medie"
   },
   "icons": {
     "16": "32.png",
