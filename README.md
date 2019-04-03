@@ -1,4 +1,4 @@
-# Benvenut in *Gesco - Calcolatore di medie*
+# Benvenuti in *Gesco - Calcolatore di medie*
 
 Questa estenzione ti permette di calcolare velocemente le medie dei voti su Gesco.
 
